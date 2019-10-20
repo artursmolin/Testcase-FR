@@ -1,0 +1,62 @@
+<div class="hero-body is-mobile">
+  <div class="container has-text-centered is-mobile">
+    <div class="column is-10 is-offset-1">
+      <h2 class="subtitle">
+        Get average daily temperature in your location for 5 days
+      </h2>
+      <%= form_for :search, url: "/search" do |form| %>
+        <div class="box">
+          <div class="field is-grouped">
+            <p class="control is-expanded">
+              <%= form.text_field :city, placeholder: "Enter your city,region or country", class: 'input' %>
+            </p>
+            <p class="control">
+              <%= form.submit 'Search',  class: 'button is-info'  %>
+            </p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <div class="column is-10 is-offset-1">
+      <div class="card" style="border-radius: 5px">
+        <br>
+        <h1 style="font-size:16px;"><b>Average temperature outside for today in <%=  @place %></b></h1>
+        <br>
+      </div>
+    </div>
+    <div class="column is-10 is-offset-1">
+      <div class="columns is-mobile">
+        <% @weather['list'].each do |forecast| %>
+          <div class="column">
+            <div class="card">
+              <div class="card-content">
+                <p class="title" style="color:black;font-size:16px">
+                  <%= forecast['dt_txt'].to_datetime.strftime('%d %B') %><br>
+                  <%= forecast['dt_txt'].to_datetime.strftime('%R') %><br>
+                <hr>
+                </p>
+                <p class="subtitle">
+                  <% case forecast['weather'][0]['main'] %>
+                  <% when 'Rain' %>
+                    <%= image_tag 'rain.png', style: 'width: 40%' %>
+                  <% when 'Clouds'  %>
+                    <%= image_tag 'day.png', style: 'width: 40%' %>
+                  <% when 'Clear' %>
+                    <%= image_tag 'sun.png', style: 'width: 40%' %>
+                  <% when 'Snow' %>
+                    <%= image_tag 'snow.png', style: 'width: 40%' %>
+                  <% end %>
+                </p>
+                <hr>
+                <p class="title" style="color:black;font-size:22px">
+                  <%= forecast['main']['temp'].round(1) %> <sup>o</sup>C<br><hr><%= (forecast['main']['temp'].round(1)*(9/5)) + 32 %> <sup>o</sup>F
+                </p>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+

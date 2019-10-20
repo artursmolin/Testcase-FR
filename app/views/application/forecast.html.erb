@@ -1,0 +1,72 @@
+<% unless @response.eql?(200) %>
+  <%= loading_screen style: :double_bounce %>
+<% end %>
+<div class="hero-body is-mobile">
+  <div class="container has-text-centered is-mobile">
+    <div class="column is-12">
+      <h2 class="subtitle">
+        Get average daily temperature in your location for 5 days
+      </h2>
+      <%= form_for :search, url: "/search" do |form| %>
+        <div class="box">
+          <div class="field is-grouped">
+            <p class="control is-expanded">
+              <%= form.text_field :city, placeholder: "Enter you city,region or country", class: 'input' %>
+            </p>
+            <p class="control">
+              <%= form.submit 'Search',  class: 'button is-info'  %>
+            </p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <% if @weather.present? %>
+      <div class="column is-12">
+        <div class="card" style="border-radius: 5px">
+          <br>
+          <h1 style="font-size:16px;"><b>Average temperature outside for 5 days in <%=  @place %></b></h1>
+          <br>
+        </div>
+      </div>
+    <div class="column is-12">
+      <div class="columns is-mobile">
+        <% @weather[0..4].each do |forecast| %>
+          <div class="column">
+            <div class="card">
+              <div class="card-content">
+                <p class="title" style="color:black;font-size:16px">
+                  <%= forecast[:date].to_datetime.strftime('%d %B') %><br>
+                <hr>
+                </p>
+                <% case forecast[:weather] %>
+                <% when 'Rain' %>
+                  <%= image_tag 'rain.png', style: 'width: 30%' %>
+                <% when 'Clouds'  %>
+                  <%= image_tag 'day.png', style: 'width: 30%' %>
+                <% when 'Clear' %>
+                  <%= image_tag 'sun.png', style: 'width: 30%' %>
+                <% when 'Snow' %>
+                  <%= image_tag 'snow.png', style: 'width: 30%' %>
+                <% end %>
+                <hr>
+                <p class="title" style="color:black;font-size:18px">
+                  <%= forecast[:tmp] %> <sup>o</sup>C<br><hr><%= (forecast[:tmp]*(9/5)) + 32 %> <sup>o</sup>F
+                </p>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <% else %>
+      <div class="columns is-vcentered is-mobile">
+        <div class="column is-10 is-offset-1">
+          <div class="card" style="border-radius: 20px;">
+            <%= image_tag 'pac-404.png', style: "border-radius: 20px;" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
